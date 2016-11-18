@@ -97,8 +97,8 @@ private[persistence] class LocalSnapshotStore extends SnapshotStore with ActorLo
         case Success(s) ⇒
           Success(Some(SelectedSnapshot(md, s.data)))
         case Failure(e) ⇒
-          log.error(e, s"Error loading snapshot [${md}]")
           val remaining = metadata.init
+          log.error(e, s"Error loading snapshot [${md}], remaining attempts: [{}]", remaining.size)
           if (remaining.isEmpty)
             Failure(e) // all attempts failed
           else
